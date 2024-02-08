@@ -30,7 +30,7 @@ public class Student implements Comparable<Student>{
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append(name).append(": ");
         sb.append(String.format("%,.0f", grade));
         return sb.toString();

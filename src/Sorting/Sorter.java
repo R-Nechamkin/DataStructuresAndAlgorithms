@@ -1,6 +1,5 @@
 package Sorting;
 
-import java.util.Comparator;
 
 public interface Sorter<T>{
 
@@ -9,7 +8,7 @@ public interface Sorter<T>{
      * @param arr An array of type {@code T}
      * @return A sorted copy of {@code arr}
      */
-    public T[] sort(T[] arr);
+    T[] sort(T[] arr);
 
 
 
