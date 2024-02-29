@@ -35,11 +35,11 @@ These sorting algorithms are highly object-oriented and optimized for efficiency
 
 ## Contributing
 
-Contributions are encouraged and welcome! If you have an implementation of a new data structure or algorithm, or if you'd like to improve existing code, feel free to open a pull request. Please ensure that your code follows the repository's coding standards and includes appropriate documentation and test cases.
-
+Contributions are encouraged and welcome! If you have an implementation of a new data structure or algorithm, or if you'd like to improve existing code, feel free to open a pull request. 
 If you encounter any issues or have suggestions for improvements, please open an issue on the GitHub repository.
 
 
 ## About This Read Me
 
-Unloading grunt work on generative AI is an important skill for developers to learn. For example, I asked OpenAI's ChatGPT to write this README for me.
+Unloading grunt work on generative AI is an important skill for developers to learn.
+For example, I asked OpenAI's ChatGPT to write this README for me. If you've got any particular ideas about how AI can take care of annoying work, please open a pull request on the README to tell me all about it.
