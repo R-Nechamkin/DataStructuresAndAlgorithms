@@ -40,6 +40,6 @@ Contributions are encouraged and welcome! If you have an implementation of a new
 If you encounter any issues or have suggestions for improvements, please open an issue on the GitHub repository.
 
 
-## Meta
+## About This Read Me
 
 Unloading grunt work on generative AI is an important skill for developers to learn. For example, I asked OpenAI's ChatGPT to write this README for me.
