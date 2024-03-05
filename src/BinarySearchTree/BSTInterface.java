@@ -1,5 +1,7 @@
 package BinarySearchTree;
 
+import interfaces.CollectionInterface;
+
 import java.util.Iterator;
 
 /**

@@ -1,4 +1,4 @@
-package BinarySearchTree;
+package interfaces;
 
 import java.util.Iterator;
 
