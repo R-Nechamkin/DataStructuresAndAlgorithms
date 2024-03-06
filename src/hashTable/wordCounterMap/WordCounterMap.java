@@ -94,12 +94,11 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
         while (node.hasNext() && !node.getKey().equals(key)){
             node = node.getNext();
         }
-        if(!node.hasNext()){
-            return null;
+        if(node.getKey().equals(key)){
+            return node.getValue();
         }
         else {
-            node = node.getNext();
-            return node.getValue();
+            return null;
         }
     }
 
@@ -120,23 +119,47 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
         }
         else if(arr[hash].getKey().equals(key)){
             size --;
-            Integer num = node.getNext().getValue();
-            arr[hash] = null;
+            Integer num = node.getValue();
+            if(node.hasNext()){
+                arr[hash] = node.getNext();
+            }
+            else {
+                arr[hash] = null;
+            }
             return num;
         }
 
-        while (node.hasNext() && !node.getKey().equals(key)){
-            node = node.getNext();
-        }
-        if(!node.hasNext()){
-            return null;
+        LinkedMapEntry<String, Integer> next;
+        do {
+            if (!node.hasNext()) {
+                return null;
+            }
+            next = node.getNext();
+        } while (!next.getKey().equals(key));
+
+
+        Integer num = next.getValue();
+        if(next.hasNext()) {
+            node.setNext(next.getNext());
         }
         else {
-            size --;
-            Integer num = node.getNext().getValue();
-            node.setNext(node.getNext().getNext());
-            return num;
+            node.setNext(null);
         }
+        size --;
+        return num;
+
+    }
+
+
+    @Deprecated
+    /**
+     * This method is used to remove an entry once the node where it exists is found.
+     * This includes updating the size, and removing the use of this entry.
+     * @param node  The entry which should be removed
+     * @return  The value stored in {@code node}
+     */
+    private Integer removeFoundNode(LinkedMapEntry<String, Integer> node){
+        return null;
     }
 
     /**
@@ -153,14 +176,14 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
             return false;
         }
         else if (arr[hash].getKey().equals(key)) {
-            return false;
+            return true;
         }
 
         while (node.hasNext() && !node.getKey().equals(key)){
             node = node.getNext();
         }
 
-        return node.getNext() != null;
+        return node.getKey().equals(key);
     }
 
     /**
@@ -256,6 +279,8 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
     /**
      * This utility method places a key in the hash map with the value of {@code  amount}.
      * If {@code  key} is already in the map, it increments the value associated with {@code key} by {@code amount}.
+     * <br/> In short, this code has the same effect as <br/>{@code map.put(key, map.getOrDefault(key, 0) + amount)} <br/>
+     *  if {@code map} was an instance of {@link java.util.Map}
      * @param key
      * @param amount
      * @return {@code true} if the incrementation is successful;
