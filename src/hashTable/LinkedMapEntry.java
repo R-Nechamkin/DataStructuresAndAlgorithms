@@ -43,7 +43,7 @@ public class LinkedMapEntry<K, V> {
 
     @Override
     public String toString() {
-        return "key = " + key + ", value = " + value;
+        return key + " = " + value;
     }
 
     
