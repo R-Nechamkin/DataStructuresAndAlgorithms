@@ -3,6 +3,14 @@ package hashTable;
 import hashTable.wordCounterMap.WordCounterMap;
 
 public class NaiiveWordCounter extends WordCounterMap {
+
+    public NaiiveWordCounter() {
+    }
+
+    public NaiiveWordCounter(int capacity, double loadFactor, boolean increaseCapacity) {
+        super(capacity, loadFactor, increaseCapacity);
+    }
+
     /**
      * This method takes in a string and hashes it
      *
