@@ -18,18 +18,21 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
     LinkedMapEntry<String, Integer>[] arr;
     int size;
     double loadFactor;
+    boolean increaseCapacity;
+
 
     /**
      * Initializes a map with a default capacity of 10 and a load factor of .75
      */
     public WordCounterMap() {
-        this(10, .75);
+        this(10, .75, true);
     }
 
-    public WordCounterMap(int capacity, double loadFactor) {
+    public WordCounterMap(int capacity, double loadFactor, boolean increaseCapacity) {
         arr = new LinkedMapEntry[capacity];
         this.loadFactor = loadFactor;
         size = 0;
+        this.increaseCapacity = increaseCapacity;
     }
 
 
@@ -46,59 +49,139 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
      */
     @Override
     public Integer put(String key, Integer value) {
-        int hash = hash(key) % arr.length;
-        LinkedMapEntry<String, Integer> node = arr[hash];
+        int index = getIndex(key);
+        LinkedMapEntry<String, Integer> node = arr[index];
+        System.out.println("Trying to place " + key + " in index " + index);
         if(node == null){
-            size ++;
-            arr[hash] = new LinkedMapEntry<>(key, value);
+            incrementSize();
+            arr[index] = new LinkedMapEntry<>(key, value);
+            System.out.println("Placed " + key + " in the head of this index.");
             return null;
         } else if (node.getKey().equals(key)) {
             Integer num = node.getValue();
             node.setValue(value);
+            System.out.println(key + " was already in head of the index. Replaced value of " + num + " with " + value);
             return num;
         }
 
         while (node.hasNext() && !node.getKey().equals(key)){
+            System.out.println("Moving to the next node.");
             node = node.getNext();
         }
         if(!node.hasNext()){
+            incrementSize();
+            System.out.println("Placing " + key + " into next node.");
             node.setNext(new LinkedMapEntry<>(key, value));
-            size ++;
             return null;
         }
         else {
             node = node.getNext();
             Integer num = node.getValue();
             node.setValue(value);
+            System.out.println(key + " is already at the next node. Replaced value of " + num + " with " + value);
             return num;
         }
     }
 
     /**
-     * Returns the value associated with the key.
-     * If there is no entry associated with the key, returns {@code null}.
-     *
-     * @param key
-     * @return
+     * This method should be called whenever a new node is added to the map.
+     * The main point is to increment {@code size} and possibly increase the capacity of the backing array.
      */
+    private void incrementSize(){
+        size ++;
+        System.out.println("Increasing size to " + size);
+        checkCapacity();
+    }
+
+    /**
+     * This method checks whether the length of the array should be increased in order to
+     *  reduce collisions.
+     */
+    private void checkCapacity(){
+        System.out.println("Checking capacity.");
+        if(increaseCapacity && (loadFactor * arr.length < size())){
+            System.out.printf("Increasing capacity, %2f percent of array filled\n", (double) size() / arr.length);
+            doubleCapacity();
+        }
+    }
+
+    /**
+     * This method doubles the capacity of the array which backs this map.
+     */
+    private void doubleCapacity(){
+        int newLength = Integer.MAX_VALUE / 2 > arr.length? arr.length * 2: Integer.MAX_VALUE;
+        System.out.println("Resizing...");
+        LinkedMapEntry<String, Integer>[] newArray = new LinkedMapEntry[newLength];
+        System.out.println("Creating new array of size " + newLength);
+        for (LinkedMapEntry<String, Integer> entry : arr) {
+            LinkedMapEntry<String, Integer> node = entry;
+            while (node != null) {
+                System.out.println("Placing " + node + " into new array.");
+                placeIntoNewArray(node, newArray);
+                node = node.getNext();
+            }
+        }
+        arr = newArray;
+    }
+
+
+    /**
+     * This method places a node into an array at the proper place.
+     * <strong>This method assumes that all nodes have unique keys.</strong>
+     * <strong>The method also does not call the incrementSize() method</strong>
+     * It is intended to be used when copying over the nodes of the map into a new array.
+     * @param node  The node to place in the array.
+     * @param array The array to place the node in.
+     */
+    private void placeIntoNewArray(LinkedMapEntry<String, Integer> node, LinkedMapEntry<String, Integer>[] array){
+        int hash = Math.abs(hash(node.getKey())) % array.length;
+        LinkedMapEntry<String, Integer> position = array[hash];
+        if(position == null){
+            array[hash] = new LinkedMapEntry<>(node.getKey(), node.getValue());
+            return;
+        }
+        while(position.hasNext()){
+            position = position.getNext();
+        }
+        position.setNext(new LinkedMapEntry<>(node.getKey(), node.getValue()));
+    }
+
     @Override
     public Integer get(String key) {
-        int hash = hash(key) % arr.length;
-        LinkedMapEntry<String, Integer> node = arr[hash];
+        return getOrDefault(key, null);
+    }
+
+    /**
+     * Returns the value associated with the key.
+     * If there is no entry associated with the key, returns {@code defaultVal}.
+     *
+     * @param key
+     * @param defaultVal
+     * @return
+     */
+    public Integer getOrDefault(String key, Integer defaultVal) {
+        int index = getIndex(key);
+        LinkedMapEntry<String, Integer> node = arr[index];
+        System.out.println("Looking for " + key + " at index: " + index);
         if(node == null){
-            return null;
+            System.out.println("There is nothing at that index, returning " + defaultVal);
+            return defaultVal;
         } else if (node.getKey().equals(key)) {
+            System.out.println("Found " + key + ", returning " + node.getValue());
             return node.getValue();
         }
 
         while (node.hasNext() && !node.getKey().equals(key)){
+            System.out.println("Going to next node.");
             node = node.getNext();
         }
         if(node.getKey().equals(key)){
+            System.out.println("Found " + key + ", returning " + node.getValue());
             return node.getValue();
         }
         else {
-            return null;
+            System.out.println("Node is not here, returning " + defaultVal);
+            return defaultVal;
         }
     }
 
@@ -111,55 +194,46 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
      */
     @Override
     public Integer remove(String key) {
-        int hash = hash(key ) % arr.length;
-        LinkedMapEntry<String, Integer> node = arr[hash];
+        int index = getIndex(key);
+        LinkedMapEntry<String, Integer> node = arr[index];
+        System.out.println("Looking for " + key + " at index: " + index);
 
-        if(arr[hash] == null){
+        if (arr[index] == null) {
+            System.out.println("There is nothing at that index, returning null");
             return null;
-        }
-        else if(arr[hash].getKey().equals(key)){
-            size --;
+        } else if (arr[index].getKey().equals(key)) {
+            size--;
             Integer num = node.getValue();
-            if(node.hasNext()){
-                arr[hash] = node.getNext();
+            if (node.hasNext()) {
+                arr[index] = node.getNext();
+            } else {
+                arr[index] = null;
             }
-            else {
-                arr[hash] = null;
-            }
+            System.out.println("Found " + key + ", reducing size to " + size);
             return num;
         }
 
         LinkedMapEntry<String, Integer> next;
         do {
             if (!node.hasNext()) {
+                System.out.println("Node is not here, returning null");
                 return null;
             }
             next = node.getNext();
+            System.out.println("Going to next node.");
         } while (!next.getKey().equals(key));
 
-
+        System.out.println("Found node.");
         Integer num = next.getValue();
-        if(next.hasNext()) {
+        if (next.hasNext()) {
             node.setNext(next.getNext());
-        }
-        else {
+        } else {
             node.setNext(null);
         }
-        size --;
+        size--;
+        System.out.println("Removed node and decremented size.");
         return num;
 
-    }
-
-
-    @Deprecated
-    /**
-     * This method is used to remove an entry once the node where it exists is found.
-     * This includes updating the size, and removing the use of this entry.
-     * @param node  The entry which should be removed
-     * @return  The value stored in {@code node}
-     */
-    private Integer removeFoundNode(LinkedMapEntry<String, Integer> node){
-        return null;
     }
 
     /**
@@ -168,22 +242,12 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
      * @param key
      * @return
      */
+    /*
+    This code implements the get function in the same way that the JCF does
+     */
     @Override
     public boolean contains(String key) {
-        int hash = hash(key)  % arr.length;
-        LinkedMapEntry<String, Integer> node = arr[hash];
-        if(arr[hash] == null){
-            return false;
-        }
-        else if (arr[hash].getKey().equals(key)) {
-            return true;
-        }
-
-        while (node.hasNext() && !node.getKey().equals(key)){
-            node = node.getNext();
-        }
-
-        return node.getKey().equals(key);
+        return get(key) != null;
     }
 
     /**
@@ -251,7 +315,14 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
          */
         @Override
         public boolean hasNext() {
-            return (i < arr.length) || (curr.hasNext());
+            if(i >= arr.length && !(curr.hasNext()))
+                return false;
+            for (int j = i +1; j < arr.length; j++) {
+                if(arr[j] != null){
+                    return true;
+                }
+            }
+            return false;
         }
 
         /**
@@ -270,55 +341,16 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
                 return curr;
             }
             else {
-                while (arr[i++] == null);
-                return arr[i];
+                while (arr[i] == null){
+                    i++;
+                }
+                return arr[i++];
             }
         }
     }
 
-    /**
-     * This utility method places a key in the hash map with the value of {@code  amount}.
-     * If {@code  key} is already in the map, it increments the value associated with {@code key} by {@code amount}.
-     * <br/> In short, this code has the same effect as <br/>{@code map.put(key, map.getOrDefault(key, 0) + amount)} <br/>
-     *  if {@code map} was an instance of {@link java.util.Map}
-     * @param key
-     * @param amount
-     * @return {@code true} if the incrementation is successful;
-     * {@code false} if the key already exists and is associated with a value of Integer.MAX_VALUE
-     */
-    public boolean putAndIncrement(String key, Integer amount){
-        int hash = hash(key) % arr.length;
-        LinkedMapEntry<String, Integer> node = arr[hash];
-        if(node == null){
-            size ++;
-            arr[hash] = new LinkedMapEntry<>(key, amount);
-            return true;
-        } else if (node.getKey().equals(key)) {
-            if(node.getValue() == Integer.MAX_VALUE){
-                return false;
-            }
-            else {
-                node.setValue(node.getValue() + amount);
-            }
-        }
 
-        while (node.hasNext() && !node.getKey().equals(key)){
-            node = node.getNext();
-        }
-        if(!node.hasNext()){
-            node.setNext(new LinkedMapEntry<>(key, amount));
-            size ++;
-            return true;
-        }
-        else {
-            node = node.getNext();
-            if(node.getValue() == Integer.MAX_VALUE){
-                return false;
-            }
-            else {
-                node.setValue(node.getValue() + amount);
-                return true;
-            }
-        }
+    protected int getIndex(String key){
+        return Math.abs(hash(key))  % arr.length;
     }
 }

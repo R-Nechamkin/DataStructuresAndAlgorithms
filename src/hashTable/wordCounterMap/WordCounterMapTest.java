@@ -2,11 +2,9 @@ package hashTable.wordCounterMap;
 
 import hashTable.JavaHashWordCounter;
 import hashTable.LinkedMapEntry;
-import hashTable.MapInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -102,7 +100,7 @@ class WordCounterMapTest {
         map.remove(array[indexToRemove]);
         for (int i = 0; i < array.length; i++) {
             if(i == indexToRemove){
-                assertFalse(mapContainsKey(array[indexToRemove]), array[indexToRemove] + "was not removed.");
+                assertFalse(mapContainsKey(array[indexToRemove]), array[indexToRemove] + " was not removed.");
             }
             else {
                 assertTrue(mapContainsKey(array[i]));
@@ -152,6 +150,17 @@ class WordCounterMapTest {
             map.remove(s);
         }
         assertTrue(map.isEmpty());
+    }
+
+
+    @Test
+    void CapacityIncreasesWhenPutIsUsed(){
+        String[] longArray = "Alpha beta gamma delta ae bee cee dee ee ef gee haich ie jay kay el em en oh pee que are es tee you vee doubleyou ex why zee ".split(" ");
+        int size = longArray.length;
+        for (int i = 0; i < longArray.length; i++) {
+            map.put(longArray[i], 5);
+        }
+        assertEquals(40, map.arr.length);
     }
 
     /**
