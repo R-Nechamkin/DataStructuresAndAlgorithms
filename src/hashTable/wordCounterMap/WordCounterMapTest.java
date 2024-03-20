@@ -5,7 +5,12 @@ import hashTable.LinkedMapEntry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -161,6 +166,29 @@ class WordCounterMapTest {
             map.put(longArray[i], 5);
         }
         assertEquals(40, map.arr.length);
+    }
+
+    @Test
+    void IteratorContainsAllElements() throws FileNotFoundException {
+        final int ARR_SIZE = 100;
+        String[] arrayFromFile = new String[ARR_SIZE];
+        String fName = "C:\\Users\\rnech\\IdeaProjects\\MoreDataStructures\\src\\hashTable\\textFiles\\Book1.txt";
+        File f = new File(fName);
+        Scanner fScanner = new Scanner(f);
+        for (int i = 0; i < ARR_SIZE; i++) {
+            arrayFromFile[i] = fScanner.next().toUpperCase();
+            map.put(arrayFromFile[i], 12);
+        }
+
+        List<String> fromIterator = new ArrayList<>(map.size());
+        for (LinkedMapEntry<String, Integer> node: map){
+            fromIterator.add(node.getKey());
+        }
+
+        for (int i = 0; i < ARR_SIZE; i++) {
+            assertTrue(fromIterator.contains(arrayFromFile[i]),
+                    "Element " + i + " : '" + arrayFromFile[i] + "' was not found.");
+        }
     }
 
     /**

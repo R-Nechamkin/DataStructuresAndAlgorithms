@@ -306,6 +306,9 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
         public Itr() {
             this.i = 0;
             this.curr = arr[i];
+            while (curr == null){
+                curr = arr[i++];
+            }
         }
 
         /**
@@ -317,9 +320,10 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
          */
         @Override
         public boolean hasNext() {
-            if(i >= arr.length && !(curr.hasNext()))
-                return false;
-            for (int j = i +1; j < arr.length; j++) {
+            if(curr.hasNext()){
+                return true;
+            }
+            for (int j = i + 1; j < arr.length; j++) {
                 if(arr[j] != null){
                     return true;
                 }
@@ -337,17 +341,16 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
         public LinkedMapEntry<String, Integer> next() {
             if(!hasNext())
                 throw new NoSuchElementException();
-
             if(curr.hasNext()){
                 curr = curr.getNext();
-                return curr;
             }
             else {
-                while (arr[i] == null){
+                do {
                     i++;
-                }
-                return arr[i++];
+                }while (i < arr.length && arr[i] == null);
+                curr = arr[i];
             }
+            return curr;
         }
     }
 
