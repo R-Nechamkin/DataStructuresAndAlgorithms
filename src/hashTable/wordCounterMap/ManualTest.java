@@ -9,7 +9,9 @@ import hashTable.NaiiveWordCounter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 /*
  * This class tests the WordCounterMap by counting the words in a text file of a book
@@ -118,17 +120,17 @@ public class ManualTest {
         System.out.println("What would you like to do? (Type the number of your choice.)");
         printOptions();
 
-        String response = input.nextLine().substring(0,1);
+        int response = input.nextInt();
         //Validate response
-        while (!"12345".contains(response)){
+        while (!(response == 1 || response ==2 || response ==3 || response ==4  || response == 5)){
             System.out.println("That is not a valid option. Please type 1, 2, 3, 4, or 5");
             if (askYesNoQuestion(input, "see the options again", "see the options again", "continue")) {
                 System.out.println("These are the options.");
                 printOptions();
             }
-            response = input.nextLine();
+            response = input.nextInt();
         }
-        return Integer.parseInt(response);
+        return response;
     }
 
     private static void printOptions(){
@@ -141,13 +143,13 @@ public class ManualTest {
 
     private static void lookUpWord(WordCounterMap map, Scanner keyboard){
         System.out.println("Type the word you wish to look up. ");
-        String word = keyboard.next();
+        String word = keyboard.next().toUpperCase();
         System.out.println("'" + word + "' occurs " + map.getOrDefault(word, 0) + " times in this text.");
     }
 
     private static void findLengthOfLinkedListOfWord(WordCounterMap map, Scanner keyboard){
         System.out.println("Type the word you wish to look up. ");
-        String word = keyboard.next();
+        String word = keyboard.next().toUpperCase();
         if(!map.contains(word)){
             System.out.println("The map does not contain the word '" + word + "'.");
         }
@@ -158,7 +160,7 @@ public class ManualTest {
             while (node != null) {
                 len ++;
                 if(node.getKey().equals(word)){
-                    pos ++;
+                    pos = len;
                 }
                 node = node.getNext();
             }
@@ -183,13 +185,15 @@ public class ManualTest {
     }
 
     private static void internalReport(WordCounterMap map){
-        System.out.println("Number of words in book: " + map.size);
+        System.out.println("Number of keys in map: " + map.size);
         System.out.println("\nNow we will show the internal structure of the hash table:\n");
         System.out.println("Size of backing array: " + map.arr.length);
         for(int i = 0; i < map.arr.length; i++){
-            System.out.println("Slot " + arraySlotToString(map.arr[i]));
+            System.out.println("Slot " + i + ": " + arraySlotToString(map.arr[i]));
         }
+        System.out.println("Just to remind you, there are " + map.size + " unique keys in the map.");
         System.out.println("Num unused slots: " + getNumUnusedSlotsInArray(map));
+        System.out.printf("%2f percent of array is filled\n", (double) map.size / map.arr.length);
 
     }
 
