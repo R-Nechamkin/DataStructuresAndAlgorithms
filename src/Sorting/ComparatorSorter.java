@@ -39,6 +39,9 @@ public abstract class ComparatorSorter<T> implements Sorter<T> {
                         " you can only sort elements which implement Comparable.java");
             }
         }
+        else {
+            localComparator = comparator;
+        }
         return sort(arr, localComparator);
     }
 
