@@ -53,9 +53,9 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
         LinkedMapEntry<String, Integer> node = arr[index];
         System.out.println("Trying to place " + key + " in index " + index);
         if(node == null){
-            incrementSize();
-            arr[index] = new LinkedMapEntry<>(key, value);
             System.out.println("Placed " + key + " in the head of this index.");
+            arr[index] = new LinkedMapEntry<>(key, value);
+            incrementSize();
             return null;
         } else if (node.getKey().equals(key)) {
             Integer num = node.getValue();
@@ -69,9 +69,9 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
             node = node.getNext();
         }
         if(!node.hasNext()){
-            incrementSize();
-            System.out.println("Placing " + key + " into next node.");
             node.setNext(new LinkedMapEntry<>(key, value));
+            System.out.println("Placing " + key + " into next node.");
+            incrementSize();
             return null;
         }
         else {
@@ -116,7 +116,6 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
         for (LinkedMapEntry<String, Integer> entry : arr) {
             LinkedMapEntry<String, Integer> node = entry;
             while (node != null) {
-                System.out.println("Placing " + node + " into new array.");
                 placeIntoNewArray(node, newArray);
                 node = node.getNext();
             }
@@ -134,16 +133,19 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
      * @param array The array to place the node in.
      */
     private void placeIntoNewArray(LinkedMapEntry<String, Integer> node, LinkedMapEntry<String, Integer>[] array){
-        int hash = Math.abs(hash(node.getKey())) % array.length;
-        LinkedMapEntry<String, Integer> position = array[hash];
+        int index = Math.abs(hash(node.getKey())) % array.length;
+        LinkedMapEntry<String, Integer> position = array[index];
         if(position == null){
-            array[hash] = new LinkedMapEntry<>(node.getKey(), node.getValue());
+            array[index] = new LinkedMapEntry<>(node.getKey(), node.getValue());
+            System.out.println("Placing " + node + " into new array at  head of index " + index);
             return;
         }
         while(position.hasNext()){
             position = position.getNext();
+            System.out.println("Going to next node of index " + index);
         }
         position.setNext(new LinkedMapEntry<>(node.getKey(), node.getValue()));
+        System.out.println("Placing " + node + " at tail of list of index " + index);
     }
 
     @Override
@@ -231,7 +233,7 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
             node.setNext(null);
         }
         size--;
-        System.out.println("Removed node and decremented size.");
+        System.out.println("Removed node and decremented size to " + size);
         return num;
 
     }
