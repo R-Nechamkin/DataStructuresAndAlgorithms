@@ -1,9 +1,9 @@
 package Graph;
 
 import java.util.List;
-import java.util.Queue;
+import java.util.Set;
 
-public interface WeightedGraph<T> {
+public interface WeightedDirectionalGraph<T> {
 
     boolean isEmpty();
     boolean isFull();
@@ -27,5 +27,11 @@ public interface WeightedGraph<T> {
      * @return
      */
     List<T> getAllVertices();
+    /**
+     * Returns a set of all vertices which the vertex is adjacent to.
+     * @param vertex
+     * @return
+     */
+    Set<T> getAdjacentVertices(T vertex);
 
 }
