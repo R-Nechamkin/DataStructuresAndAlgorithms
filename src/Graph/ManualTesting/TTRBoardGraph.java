@@ -1,49 +1,45 @@
 package Graph.ManualTesting;
 
-
 import Graph.UndirectedGraph;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class TTRBoardGraph {
-    UndirectedGraph<City> graph;
-    Map<String, City> cityNames;
+    UndirectedGraph<String> graph;
 
-    public TTRBoardGraph(UndirectedGraph<City> graph) {
+    public TTRBoardGraph(UndirectedGraph<String> graph) {
         this.graph = graph;
-        cityNames = new HashMap<>();
-        addSomeNamesToCityMap();
+        addSomeCities();
     }
 
-    private void addSomeNamesToCityMap(){
-        String[] arrayOfNames = {"Vancover", "Seattle", "Portland", "San Francisco",
-        "Los Angeles", "Los Vegas", "Salt Lake City", "Helena", "Calgary", "Winnipeg"
-        , "Denver"};
-
-        for(String name: arrayOfNames){
-            cityNames.put(name, new City(name));
-        }
+    public UndirectedGraph<String> getGraph(){
+        return graph;
     }
 
     public void addSomeCities(){
-        cityNames.values().forEach(graph::addVertex);
-        graph.addEdge(cityNames.get("Vancouver"), cityNames.get("Seattle"), 1);
-        graph.addEdge(cityNames.get("Seattle"), cityNames.get("Portland"), 1);
-        graph.addEdge(cityNames.get("Portland"), cityNames.get("San Francisco"), 5);
-        graph.addEdge(cityNames.get("San Francisco"), cityNames.get("Los Angeles"), 3);
-        graph.addEdge(cityNames.get("Los Angeles"), cityNames.get("Las Vegas"), 2);
-        graph.addEdge(cityNames.get("Las Vegas"), cityNames.get("Salt Lake City"), 1);
-        graph.addEdge(cityNames.get("San Francisco"), cityNames.get("Salt Lake City"), 5);
-        graph.addEdge(cityNames.get("Portland"), cityNames.get("Salt Lake City"), 6);
-        graph.addEdge(cityNames.get("Salt Lake City"), cityNames.get("Helena"), 3);
-        graph.addEdge(cityNames.get("Seattle"), cityNames.get("Helena"), 6);
-        graph.addEdge(cityNames.get("Portland"), cityNames.get("Calgary"), 3);
-        graph.addEdge(cityNames.get("Seattle"), cityNames.get("Calgary"), 4);
-        graph.addEdge(cityNames.get("Calgary"), cityNames.get("Helena"), 4);
-        graph.addEdge(cityNames.get("Calgary"), cityNames.get("Winnipeg"), 6);
-        graph.addEdge(cityNames.get("Helena"), cityNames.get("Winnipeg"), 4);
-        graph.addEdge(cityNames.get("Helena"), cityNames.get("Denver"), 4);
-        graph.addEdge(cityNames.get("Salt Lake City"), cityNames.get("Denver"), 3);
+        String[] arrayOfNames = {"Vancouver", "Seattle", "Portland", "San Francisco",
+                "Los Angeles", "Las Vegas", "Salt Lake City", "Helena", "Calgary", "Winnipeg"
+                , "Denver"};
+
+        for(String name: arrayOfNames){
+            graph.addVertex(name);
+        }
+
+        graph.addEdge("Vancouver", "Seattle", 1);
+        graph.addEdge("Vancouver", "Calgary", 3);
+        graph.addEdge("Seattle", "Portland", 1);
+        graph.addEdge("Portland", "San Francisco", 5);
+        graph.addEdge("San Francisco", "Los Angeles", 3);
+        graph.addEdge("Los Angeles", "Las Vegas", 2);
+        graph.addEdge("Las Vegas", "Salt Lake City", 1);
+        graph.addEdge("San Francisco", "Salt Lake City", 5);
+        graph.addEdge("Portland", "Salt Lake City", 6);
+        graph.addEdge("Salt Lake City", "Helena", 3);
+        graph.addEdge("Seattle", "Helena", 6);
+        graph.addEdge("Portland", "Calgary", 3);
+        graph.addEdge("Seattle", "Calgary", 4);
+        graph.addEdge("Calgary", "Helena", 4);
+        graph.addEdge("Calgary", "Winnipeg", 6);
+        graph.addEdge("Helena", "Winnipeg", 4);
+        graph.addEdge("Helena", "Denver", 4);
+        graph.addEdge("Salt Lake City", "Denver", 3);
     }
 }
