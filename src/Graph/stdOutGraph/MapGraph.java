@@ -1,10 +1,10 @@
 package Graph.stdOutGraph;
 
-import Graph.WeightedGraph;
+import Graph.WeightedDirectionalGraph;
 
 import java.util.*;
 
-public class MapGraph<T> implements WeightedGraph<T> {
+public class MapGraph<T> implements WeightedDirectionalGraph<T> {
     int size;
     Map<T, Map<T, Integer>> vertices;
 
@@ -108,6 +108,11 @@ public class MapGraph<T> implements WeightedGraph<T> {
     @Override
     public List<T> getAllVertices() {
         return List.copyOf(vertices.keySet());
+    }
+
+    @Override
+    public Set<T> getAdjacentVertices(T vertex) {
+        return vertices.get(vertex).keySet();
     }
 
 
