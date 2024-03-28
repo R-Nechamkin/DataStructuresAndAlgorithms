@@ -10,13 +10,13 @@ import java.util.Queue;
 public class TraversalObject<T> {
 
     Queue<T> path;
-    int totalWeight;
+
     T startingVertex;
     T endingVertex;
 
-    public TraversalObject(Queue<T> path, int totalWeight, T startingVertex, T endingVertex) {
+    public TraversalObject(Queue<T> path, T startingVertex, T endingVertex) {
         this.path = path;
-        this.totalWeight = totalWeight;
+
     }
 
     public boolean pathExists(){
@@ -33,9 +33,6 @@ public class TraversalObject<T> {
         return path;
     }
 
-    public int getTotalWeight() {
-        return totalWeight;
-    }
 
     public T getStartingVertex() {
         return startingVertex;
