@@ -2,7 +2,7 @@ package Graph;
 
 public class TestingUtilityMethods {
 
-    public static int[][] addLotsOfEdgesToStringGraph(WeightedDirectionalGraph<String> graph, String[] array, int WEIGHT){
+    public static int[][] addLotsOfEdgesToStringGraph(Graph<String> graph, String[] array, int WEIGHT){
         int[][] edges = createListOfEdges(array);
 
         for (int i = 0; i < edges.length; i++) {
