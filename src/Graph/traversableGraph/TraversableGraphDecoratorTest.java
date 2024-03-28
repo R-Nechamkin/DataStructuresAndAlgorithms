@@ -1,6 +1,6 @@
 package Graph.traversableGraph;
 
-import Graph.stdOutGraph.MapGraph;
+import Graph.undirectedMapGraph.MapGraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ class TraversableGraphDecoratorTest {
     String[] array;
     @BeforeEach
     void setUp() {
-        graph = new TraversableGraphDecorator<>(new MapGraph<>());
+        graph = new TraversableGraphDecorator<String>(new MapGraph<>());
         array = new String[]{"Cucumber", "Apple", "Beet", "Orange", "Lettuce", "Grape", "Grapefruit",
                 "Carrot", "Date", "Peach", "Nectarine"};
     }

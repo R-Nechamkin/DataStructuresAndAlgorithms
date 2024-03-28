@@ -1,14 +1,14 @@
 package Graph.traversableGraph;
 
-import Graph.WeightedDirectionalGraph;
+import Graph.Graph;
 
 import java.util.*;
 
-public class TraversableGraphDecorator<T>  implements WeightedDirectionalGraph<T> {
+public class TraversableGraphDecorator<T>  implements Graph<T> {
     Set<T> marked;
-    WeightedDirectionalGraph<T> internalGraph;
+    Graph<T> internalGraph;
 
-    public TraversableGraphDecorator(WeightedDirectionalGraph<T> graph) {
+    public TraversableGraphDecorator(Graph<T> graph) {
         this.marked = new HashSet<>();
         this.internalGraph = graph;
     }

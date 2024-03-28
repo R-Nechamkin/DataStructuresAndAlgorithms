@@ -1,10 +1,11 @@
-package Graph.stdOutGraph;
+package Graph.undirectedMapGraph;
 
-import Graph.WeightedDirectionalGraph;
+import Graph.DirectedGraph;
+import Graph.UndirectedGraph;
 
 import java.util.*;
 
-public class MapGraph<T> implements WeightedDirectionalGraph<T> {
+public class MapGraph<T> implements UndirectedGraph<T> {
     int size;
     Map<T, Map<T, Integer>> vertices;
 
@@ -51,58 +52,62 @@ public class MapGraph<T> implements WeightedDirectionalGraph<T> {
     }
 
     /**
-     * Adds an edge between fromVertex to toVertex with the given weight.
+     * Adds an edge between vertexOne to vertexTwo with the given weight.
      * If such an edge already exists, replaces the weight with the given weight
-     * @param fromVertex
-     * @param toVertex
+     * @param vertexOne
+     * @param vertexTwo
      * @param weight
      */
     @Override
-    public void addEdge(T fromVertex, T toVertex, int weight) {
-        if (fromVertex.equals(toVertex)) {
+    public void addEdge(T vertexOne, T vertexTwo, int weight) {
+        if (vertexOne.equals(vertexTwo)) {
             throw new IllegalArgumentException("You cannot add an edge from a vertex to itself.");
         }
-        if(! (hasVertex(fromVertex) && hasVertex(toVertex))){
+        if(! (hasVertex(vertexOne) && hasVertex(vertexTwo))){
             throw new IllegalStateException("One of the vertices is not in the graph");
         }
-        vertices.get(fromVertex).put(toVertex, weight);
+        vertices.get(vertexOne).put(vertexTwo, weight);
+        vertices.get(vertexTwo).put(vertexOne, weight);
     }
 
     @Override
-    public void removeEdge(T fromVertex, T toVertex) {
-        Map<T, Integer> map = vertices.get(fromVertex);
-        map.remove(toVertex);
+    public void removeEdge(T vertexOne, T vertexTwo) {
+        Map<T, Integer> map = vertices.get(vertexOne);
+        map.remove(vertexTwo);
+
+        map = vertices.get(vertexTwo);
+        map.remove(vertexOne);
     }
 
     /**
      * Returns the weight of the edge from one vertex to another, or -1 if there is no such edge.
-     * If the fromVertex and ToVertex are the same, returns 0;
-     * @param fromVertex
-     * @param toVertex
+     * If the vertexOne and ToVertex are the same, returns 0;
+     * @param vertexOne
+     * @param vertexTwo
      * @return
      */
     @Override
-    public int weightIs(T fromVertex, T toVertex) {
-        if(fromVertex.equals(toVertex)){
+    public int weightIs(T vertexOne, T vertexTwo) {
+        if(vertexOne.equals(vertexTwo)){
             return 0;
         }
-        Integer result = vertices.get(fromVertex).get(toVertex);
+        Integer result = vertices.get(vertexOne).get(vertexTwo);
         return (result == null) ? -1: result;
     }
 
     /**
-     * This method returns true if there is an edge from fromVertex to toVertex.
+     * This method returns true if there is an edge from vertexOne to vertexTwo.
      * If the two vertices are the same, the method returns true.
-     * @param fromVertex
-     * @param toVertex
+     * @param vertexOne
+     * @param vertexTwo
      * @return
      */
     @Override
-    public boolean hasEdge(T fromVertex, T toVertex){
-        if(fromVertex.equals(toVertex)){
+    public boolean hasEdge(T vertexOne, T vertexTwo){
+        if(vertexOne.equals(vertexTwo)){
             return true;
         }
-        return vertices.get(fromVertex).containsKey(toVertex);
+        return vertices.get(vertexOne).containsKey(vertexTwo);
     }
 
     @Override

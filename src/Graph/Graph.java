@@ -3,7 +3,7 @@ package Graph;
 import java.util.List;
 import java.util.Set;
 
-public interface WeightedDirectionalGraph<T> {
+public interface Graph<T> {
 
     boolean isEmpty();
     boolean isFull();

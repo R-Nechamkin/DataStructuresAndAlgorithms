@@ -1,4 +1,4 @@
-package Graph.stdOutGraph;
+package Graph.undirectedMapGraph;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -268,7 +268,7 @@ class MapGraphTest {
 
 
     /*
-    * start is inclusive, end is exclusive
+     * start is inclusive, end is exclusive
      */
     void addSomeOfSampleArrayToGraph(int start, int end){
         for (int i = start; i < end; i++) {

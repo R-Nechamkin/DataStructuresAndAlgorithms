@@ -1,6 +1,6 @@
 package Graph.graphTraverser;
 
-import Graph.stdOutGraph.MapGraph;
+import Graph.undirectedMapGraph.MapGraph;
 import Graph.traversableGraph.TraversableGraphDecorator;
 import static Graph.TestingUtilityMethods.addLotsOfEdgesToStringGraph;
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Queue;
-import java.util.Stack;
 
 class GraphTraverserTest {
     GraphTraverser<String> traverser;
@@ -18,7 +17,7 @@ class GraphTraverserTest {
 
     @BeforeEach
     void setUp(){
-        graph = new TraversableGraphDecorator<>(new MapGraph<>());
+        graph = new TraversableGraphDecorator<String>(new MapGraph<>());
         traverser = new GraphTraverser<>(graph);
         array = new String[] {"A", "B", "C", "D", "E", "F","G", "H", "I", "J", "K"};
     }
