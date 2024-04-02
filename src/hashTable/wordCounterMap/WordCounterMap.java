@@ -5,12 +5,14 @@ import hashTable.MapInterface;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
+import java.util.function.IntFunction;
 
 /**
  * This class is a map with {@link String} keys and {@link Integer} values.
  * <br>The expected use is to count the number of occurrences of words.
  */
-public abstract class WordCounterMap implements MapInterface<String, Integer> {
+public class WordCounterMap implements MapInterface<String, Integer> {
 
     /*
     Class variables are not private in order that the test class can see them
@@ -19,20 +21,22 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
     int size;
     double loadFactor;
     boolean increaseCapacity;
+    Function<String, Integer> hashFunction;
 
 
     /**
      * Initializes a map with a default capacity of 10 and a load factor of .75
      */
-    public WordCounterMap() {
-        this(10, .75, true);
+    public WordCounterMap(Function<String, Integer> hashFunction) {
+        this(10, .75, true, hashFunction);
     }
 
-    public WordCounterMap(int capacity, double loadFactor, boolean increaseCapacity) {
+    public WordCounterMap(int capacity, double loadFactor, boolean increaseCapacity, Function<String, Integer> hashFunction) {
         arr = new LinkedMapEntry[capacity];
         this.loadFactor = loadFactor;
         size = 0;
         this.increaseCapacity = increaseCapacity;
+        this.hashFunction = hashFunction;
     }
 
 
@@ -133,7 +137,8 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
      * @param array The array to place the node in.
      */
     private void placeIntoNewArray(LinkedMapEntry<String, Integer> node, LinkedMapEntry<String, Integer>[] array){
-        int index = Math.abs(hash(node.getKey())) % array.length;
+        int hash = hashFunction.apply(node.getKey());
+        int index = Math.abs(hash) % array.length;
         LinkedMapEntry<String, Integer> position = array[index];
         if(position == null){
             array[index] = new LinkedMapEntry<>(node.getKey(), node.getValue());
@@ -284,12 +289,6 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
 
 
     /**
-     * This method takes in a string and hashes it
-     * @return
-     */
-    protected abstract int hash(String str);
-
-    /**
      * Returns an iterator over elements of type {@code T}.
      *
      * @return an Iterator.
@@ -356,6 +355,7 @@ public abstract class WordCounterMap implements MapInterface<String, Integer> {
 
 
     protected int getIndex(String key){
-        return Math.abs(hash(key))  % arr.length;
+        int hash = hashFunction.apply(key);
+        return Math.abs(hash)  % arr.length;
     }
 }

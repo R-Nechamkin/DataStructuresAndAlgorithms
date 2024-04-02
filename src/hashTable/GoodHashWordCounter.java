@@ -9,16 +9,16 @@ import hashTable.wordCounterMap.WordCounterMap;
  */
 public class GoodHashWordCounter extends WordCounterMap {
     public GoodHashWordCounter() {
+        super(GoodHashWordCounter::hash);
     }
 
     public GoodHashWordCounter(int capacity, double loadFactor, boolean increaseCapacity) {
-        super(capacity, loadFactor, increaseCapacity);
+        super(capacity, loadFactor, increaseCapacity, GoodHashWordCounter::hash);
     }
 
     final static int p = 53;
 
-    @Override
-    protected int hash(String str) {
+    private static int hash(String str) {
         int hash = 0;
         for (int i = 0; i < str.length(); i++) {
             hash += (int) (str.charAt(i) * Math.pow(p, i));
